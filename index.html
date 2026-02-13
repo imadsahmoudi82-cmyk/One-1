@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ONE 1 | السوق المفتوح</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --p: #6c5ce7; --bg: #f8f9fa; --card: #ffffff; --text: #2d3436; }
+        
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding-bottom: 90px; 
+            overflow-x: hidden; 
+        }
+
+        /* --- أنيميشن الضغط المتفق عليه --- */
+        .clickable, button, .nav-item, .cat-item, .product-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .clickable:active, button:active, .nav-item:active, .cat-item:active, .product-card:active {
+            transform: scale(0.95) translateY(2px);
+        }
+
+        /* --- Header --- */
+        header { 
+            padding: 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            position: sticky; 
+            top: 0; 
+            background: white; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .search-box { 
+            flex: 1; 
+            background: #f1f2f6; 
+            border-radius: 12px; 
+            padding: 10px 15px; 
+            display: flex; 
+            align-items: center; 
+        }
+        .search-box input { 
+            background: none; border: none; width: 100%; outline: none; margin-right: 8px; font-size: 14px; 
+        }
+        .logout-btn { 
+            width: 42px; height: 42px; border-radius: 12px; background: #fff1f2; 
+            color: #ff4757; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 1px solid #ffe4e6;
+        }
+
+        /* --- Categories --- */
+        .categories { padding: 15px; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-item { 
+            padding: 8px 18px; background: white; border-radius: 10px; 
+            font-size: 13px; font-weight: 600; border: 1px solid #eee; white-space: nowrap;
+        }
+        .cat-item.active { background: var(--p); color: white; border-color: var(--p); }
+
+        /* --- Feed (Products Grid) --- */
+        .feed { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            padding: 15px; 
+        }
+        .product-card { 
+            background: white; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            border: 1px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .product-img { width: 100%; height: 140px; background: #eee; object-fit: cover; }
+        .product-info { padding: 10px; }
+        .product-price { color: var(--p); font-weight: 800; font-size: 16px; display: block; }
+        .product-title { font-size: 13px; color: #555; margin: 4px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .product-loc { font-size: 11px; color: #aaa; }
+
+        /* --- Bottom Nav --- */
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; background: white; 
+            border-top: 1px solid #eee; display: flex; justify-content: space-around; 
+            padding: 10px 0; z-index: 1000; align-items: center;
+        }
+        .nav-item { color: #ccc; font-size: 20px; text-decoration: none; position: relative; }
+        .nav-item.active { color: var(--p); }
+        .add-post { 
+            background: var(--p); width: 50px; height: 50px; border-radius: 18px; 
+            color: white !important; display: flex; align-items: center; justify-content: center; 
+            margin-top: -40px; box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4); border: 4px solid var(--bg);
+        }
+
+        /* --- Logout Overlay --- */
+        .overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; 
+            z-index: 2000; backdrop-filter: blur(5px); 
+        }
+        .logout-card { 
+            background: white; padding: 25px; border-radius: 20px; width: 80%; 
+            max-width: 300px; text-align: center; 
+        }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-act { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="search-box">
+            <i class="fa fa-search" style="color: #bbb;"></i>
+            <input type="text" placeholder="ماذا تبحث عنه اليوم؟">
+        </div>
+        <div class="logout-btn clickable" id="openLogout">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </div>
+    </header>
+
+    <div class="categories">
+        <div class="cat-item active">الكل</div>
+        <div class="cat-item">سيارات</div>
+        <div class="cat-item">عقارات</div>
+        <div class="cat-item">إلكترونيات</div>
+        <div class="cat-item">أثاث</div>
+    </div>
+
+    <div class="feed">
+        <div class="product-card clickable">
+            <div class="product-img"></div>
+            <div class="product-info">
+                <span class="product-price">2500 درهم</span>
+                <p class="product-title">آيفون 13 برو نظيف جداً</p>
+                <span class="product-loc"><i class="fa fa-location-dot"></i> الدار البيضاء</span>
+            </div>
+        </div>
+        <div class="product-card clickable">
+            <div class="product-img"></div>
+            <div class="product-info">
+                <span class="product-price">1200 درهم</span>
+                <p class="product-title">طاولة خشبية ممتازة</p>
+                <span class="product-loc"><i class="fa fa-location-dot"></i> طنجة</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="logoutOverlay">
+        <div class="logout-card">
+            <h3 style="margin:0">تسجيل الخروج</h3>
+            <p style="color:#777; font-size:14px">هل أنت متأكد من رغبتك في الخروج؟</p>
+            <div class="btn-group">
+                <button class="btn-act clickable" id="confirmLogout" style="background:#ff4757; color:white">خروج</button>
+                <button class="btn-act clickable" id="cancelLogout" style="background:#eee">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active"><i class="fa fa-house"></i></a>
+        <a href="#" class="nav-item"><i class="fa fa-heart"></i></a>
+        <a href="#" class="nav-item add-post clickable"><i class="fa fa-plus" style="font-size:24px"></i></a>
+        <a href="#" class="nav-item"><i class="fa fa-message"></i></a>
+        <a href="profile.html" class="nav-item"><i class="fa fa-user"></i></a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDj1jWQZHnELXe_eFkfGpi3F3_jPGhPm7I", 
+            authDomain: "one1-95c0e.firebaseapp.com", 
+            projectId: "one1-95c0e", 
+            appId: "1:1090900617422:web:f6e9c11bb7a090c39ec89f" 
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.replace("auth.html");
+        });
+
+        const overlay = document.getElementById('logoutOverlay');
+        document.getElementById('openLogout').onclick = () => overlay.style.display = 'flex';
+        document.getElementById('cancelLogout').onclick = () => overlay.style.display = 'none';
+        document.getElementById('confirmLogout').onclick = async () => {
+            await signOut(auth);
+            window.location.replace("auth.html");
+        };
+    </script>
+</body>
+</html>
