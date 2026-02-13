@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ONE 1 | السوق</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --p: #6c5ce7; --bg: #ffffff; --text: #2d3436; --gray: #f1f2f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+
+        /* أنيميشن الضغط */
+        .clickable, .cat-item, .nav-item, .support-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .clickable:active, .cat-item:active, .nav-item:active, .support-card:active {
+            transform: scale(0.92) translateY(2px);
+        }
+
+        /* Header */
+        header { padding: 15px; display: flex; align-items: center; gap: 12px; background: white; position: sticky; top: 0; z-index: 1000; }
+        .search-box { flex: 1; background: var(--gray); border-radius: 12px; padding: 10px 15px; display: flex; align-items: center; }
+        .search-box input { background: none; border: none; width: 100%; outline: none; margin-right: 8px; font-size: 14px; }
+        .logout-btn { width: 42px; height: 42px; border-radius: 12px; background: #fff1f2; color: #ff4757; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 1px solid #ffe4e6; }
+
+        /* Content Pages */
+        .page-content { display: none; padding: 20px; min-height: 70vh; }
+        .page-content.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Empty State Views */
+        .empty-view { text-align: center; padding-top: 80px; color: #ccc; }
+        .empty-view i { font-size: 70px; margin-bottom: 20px; opacity: 0.4; color: var(--p); }
+        .empty-view h2 { font-size: 18px; color: #555; margin: 0; font-weight: 600; }
+        .empty-view p { font-size: 14px; color: #999; margin-top: 8px; }
+
+        /* Support Card */
+        .support-card { background: #f9f9ff; border: 2px dashed var(--p); border-radius: 20px; padding: 20px; margin-top: 40px; text-align: center; }
+        .support-card h4 { margin: 0 0 10px; color: var(--p); }
+        .support-link { display: block; color: #555; text-decoration: none; margin: 8px 0; font-size: 14px; font-weight: bold; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; align-items: center; }
+        .nav-item { color: #ccc; font-size: 22px; transition: 0.3s; }
+        .nav-item.active { color: var(--p); }
+        .add-post { background: var(--p); width: 55px; height: 55px; border-radius: 50%; color: white !important; display: flex; align-items: center; justify-content: center; margin-top: -45px; box-shadow: 0 8px 20px rgba(108,92,231,0.3); border: 5px solid white; }
+
+        /* Overlay */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(5px); }
+        .logout-card { background: white; padding: 25px; border-radius: 20px; width: 80%; max-width: 300px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="search-box">
+            <i class="fa fa-search" style="color: #bbb;"></i>
+            <input type="text" id="mainSearch" placeholder="ماذا تبحث عنه اليوم؟">
+        </div>
+        <div class="logout-btn clickable" id="openLogout"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
+    </header>
+
+    <div id="home-page" class="page-content active">
+        <div class="empty-view">
+            <i class="fa-solid fa-box-open"></i>
+            <h2>لا توجد إعلانات بعد</h2>
+            <p>كن أول من ينشر منتجاً هنا</p>
+        </div>
+    </div>
+
+    <div id="fav-page" class="page-content">
+        <div class="empty-view">
+            <i class="fa-solid fa-heart-circle-xmark"></i>
+            <h2>لا توجد عناصر في المفضلة حالياً</h2>
+            <p>العناصر التي تعجبك ستظهر هنا لاحقاً</p>
+        </div>
+    </div>
+
+    <div id="chat-page" class="page-content">
+        <div class="empty-view" style="padding-top: 20px;">
+            <i class="fa-solid fa-comments"></i>
+            <h2>لم تتواصل مع أي أحد حتى الآن</h2>
+            <p>ابدأ الدردشة مع البائعين للاستفسار عن المنتجات</p>
+        </div>
+        
+        <div class="support-card clickable">
+            <h4>مركز الدعم الفني</h4>
+            <p style="font-size: 12px; color: #888;">هل تحتاج لمساعدة؟ نحن هنا من أجلك</p>
+            <a href="tel:+972592738901" class="support-link"><i class="fa fa-phone"></i> +972 592738901</a>
+            <a href="mailto:sw803812@gmail.com" class="support-link"><i class="fa fa-envelope"></i> sw803812@gmail.com</a>
+        </div>
+    </div>
+
+    <div id="profile-page" class="page-content">
+        <div class="empty-view">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <h2>سوف يتم إضافة هذا قريباً</h2>
+            <p>نحن نعمل على تطوير هذه الصفحة حالياً</p>
+        </div>
+    </div>
+
+    <div class="overlay" id="logoutOverlay">
+        <div class="logout-card">
+            <h3>تسجيل الخروج</h3>
+            <p style="font-size: 14px; color: #777;">هل أنت متأكد من رغبتك في الخروج؟</p>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="clickable" id="confirmLogout" style="flex:1; padding:12px; border-radius:10px; border:none; background:#ff4757; color:white; font-weight:bold;">خروج</button>
+                <button class="clickable" id="cancelLogout" style="flex:1; padding:12px; border-radius:10px; border:none; background:#eee;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="showPage('home-page', this)"><i class="fa fa-house"></i></div>
+        <div class="nav-item" onclick="showPage('fav-page', this)"><i class="fa fa-heart"></i></div>
+        <div class="nav-item add-post clickable"><i class="fa fa-plus"></i></div>
+        <div class="nav-item" onclick="showPage('chat-page', this)"><i class="fa fa-message"></i></div>
+        <div class="nav-item" onclick="showPage('profile-page', this)"><i class="fa fa-user"></i></div>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyDj1jWQZHnELXe_eFkfGpi3F3_jPGhPm7I", authDomain: "one1-95c0e.firebaseapp.com", projectId: "one1-95c0e", appId: "1:1090900617422:web:f6e9c11bb7a090c39ec89f" };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.showPage = (pageId, element) => {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            element.classList.add('active');
+            
+            const sInput = document.querySelector('#mainSearch');
+            sInput.placeholder = (pageId === 'chat-page') ? "بحث عن الأشخاص..." : "ماذا تبحث عنه اليوم؟";
+        };
+
+        const overlay = document.getElementById('logoutOverlay');
+        document.getElementById('openLogout').onclick = () => overlay.style.display = 'flex';
+        document.getElementById('cancelLogout').onclick = () => overlay.style.display = 'none';
+        document.getElementById('confirmLogout').onclick = async () => { 
+            await signOut(auth); 
+            window.location.replace("auth.html"); 
+        };
+    </script>
+</body>
+</html>
