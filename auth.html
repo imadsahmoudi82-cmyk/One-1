@@ -56,21 +56,27 @@
 
     setPersistence(auth, browserLocalPersistence);
 
-    getRedirectResult(auth).then((res) => {
-        if (res?.user) window.location.replace("index.html");
+    getRedirectResult(auth).then((result) => {
+        if (result?.user) {
+            location.replace("index.html");
+        }
+    }).catch((error) => {
+        console.error(error.message);
     });
 
-    onAuthStateChanged(auth, (u) => {
-        if (u) window.location.replace("index.html");
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            location.replace("index.html");
+        }
     });
 
     document.getElementById('loginBtn').onclick = async () => {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('pass').value;
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
         const err = document.getElementById('errorMessage');
         try {
-            await signInWithEmailAndPassword(auth, e, p);
-        } catch (x) {
+            await signInWithEmailAndPassword(auth, email, pass);
+        } catch (e) {
             err.textContent = "خطأ في بيانات الدخول";
             err.style.display = "block";
         }
