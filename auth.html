@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تسجيل الدخول</title>
+    <style>
+        :root { --p: #6c5ce7; --bg: #050505; --card: #121212; }
+        body { font-family: sans-serif; background: var(--bg); color: white; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .auth-card { background: var(--card); padding: 40px 25px; border-radius: 30px; width: 92%; max-width: 400px; text-align: center; border: 1px solid #222; box-sizing: border-box; }
+        .logo { font-size: 35px; font-weight: 900; color: var(--p); margin-bottom: 30px; }
+        input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 15px; color: white; outline: none; box-sizing: border-box; font-size: 16px; }
+        .btn-main { width: 100%; padding: 16px; background: var(--p); border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .divider { margin: 25px 0; color: #444; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #222; margin: 0 10px; }
+        .btn-google { width: 100%; padding: 14px; background: white; color: black; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; }
+        .links { margin-top: 25px; font-size: 14px; }
+        .links a { color: #888; text-decoration: none; display: block; margin: 10px 0; }
+        .links a span { color: var(--p); font-weight: bold; }
+        #errorMessage { color: #ff4757; font-size: 13px; margin-bottom: 15px; display: none; background: rgba(255, 71, 87, 0.1); padding: 10px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="auth-card">
+    <div class="logo">ONE 1</div>
+    <div id="errorMessage"></div>
+    <input type="email" id="email" placeholder="البريد الإلكتروني">
+    <input type="password" id="pass" placeholder="كلمة المرور">
+    <button class="btn-main" id="loginBtn">تسجيل الدخول</button>
+    <div class="divider">أو عبر</div>
+    <button class="btn-google" id="googleBtn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+        متابعة باستخدام Google
+    </button>
+    <div class="links">
+        <a href="forgot-password.html">هل نسيت كلمة المرور؟</a>
+        <a href="register.html">ليس لديك حساب؟ <span>إنشاء حساب جديد</span></a>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDj1jWQZHnELXe_eFkfGpi3F3_jPGhPm7I",
+        authDomain: "one1-95c0e.firebaseapp.com",
+        projectId: "one1-95c0e",
+        appId: "1:1090900617422:web:f6e9c11bb7a090c39ec89f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    setPersistence(auth, browserLocalPersistence);
+
+    getRedirectResult(auth).then((res) => {
+        if (res?.user) window.location.replace("index.html");
+    });
+
+    onAuthStateChanged(auth, (u) => {
+        if (u) window.location.replace("index.html");
+    });
+
+    document.getElementById('loginBtn').onclick = async () => {
+        const e = document.getElementById('email').value;
+        const p = document.getElementById('pass').value;
+        const err = document.getElementById('errorMessage');
+        try {
+            await signInWithEmailAndPassword(auth, e, p);
+        } catch (x) {
+            err.textContent = "خطأ في بيانات الدخول";
+            err.style.display = "block";
+        }
+    };
+
+    document.getElementById('googleBtn').onclick = () => {
+        signInWithRedirect(auth, provider);
+    };
+</script>
+
+</body>
+</html>

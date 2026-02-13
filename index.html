@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>الرئيسية | ONE 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --p: #6c5ce7; --bg: #ffffff; --text: #1a1a1a; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 70px; opacity: 0; transition: opacity 0.5s; }
+        
+        .header { position: sticky; top: 0; background: #000; padding: 10px 15px; display: flex; align-items: center; gap: 10px; z-index: 1000; height: 50px; }
+        .logo { color: var(--p); font-weight: 900; font-size: 18px; }
+        .search-bar { flex: 1; background: #1a1a1a; border-radius: 20px; display: flex; align-items: center; padding: 6px 12px; }
+        .search-bar input { background: none; border: none; color: white; width: 100%; outline: none; font-size: 13px; text-align: right; }
+        .search-bar i { color: #666; margin-left: 6px; font-size: 14px; }
+        .user-icon { color: white; font-size: 20px; cursor: pointer; }
+
+        .main-content { padding: 80px 20px; text-align: center; }
+        .empty-state i { font-size: 100px; color: #f0f0f0; margin-bottom: 20px; }
+        .empty-state h2 { color: #999; font-size: 22px; margin: 10px 0; }
+        .empty-state p { color: #ccc; font-size: 15px; }
+
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; align-items: center; height: 65px; border-top: 1px solid #eee; z-index: 1000; }
+        .nav-item { color: #ccc; font-size: 22px; cursor: pointer; flex: 1; text-align: center; }
+        .nav-item.active { color: var(--p); }
+
+        .fab-container { position: relative; top: -15px; flex: 1; display: flex; justify-content: center; }
+        .fab { width: 52px; height: 52px; background: var(--p); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3); border: 4px solid #fff; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <i class="fa-regular fa-circle-user user-icon" id="profileBtn"></i>
+        <div class="search-bar">
+            <input type="text" placeholder="ابحث في وان 1...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="logo">ONE 1</div>
+    </header>
+
+    <div class="main-content">
+        <div class="empty-state">
+            <i class="fa-solid fa-box-open"></i>
+            <h2>لا توجد إعلانات بعد</h2>
+            <p>ابدأ بنشر أول إعلان في المنصة</p>
+        </div>
+    </div>
+
+    <nav class="nav-bottom">
+        <i class="fa-regular fa-user nav-item"></i>
+        <i class="fa-regular fa-comment-dots nav-item"></i>
+        <div class="fab-container"><div class="fab"><i class="fa-solid fa-plus"></i></div></div>
+        <i class="fa-regular fa-heart nav-item"></i>
+        <i class="fa-solid fa-house nav-item active"></i>
+    </nav>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDj1jWQZHnELXe_eFkfGpi3F3_jPGhPm7I",
+        authDomain: "one1-95c0e.firebaseapp.com",
+        projectId: "one1-95c0e",
+        appId: "1:1090900617422:web:f6e9c11bb7a090c39ec89f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.body.style.opacity = "1";
+        } else {
+            window.location.replace("auth.html");
+        }
+    });
+
+    document.getElementById('profileBtn').onclick = () => {
+        if(confirm("هل تريد تسجيل الخروج؟")) {
+            signOut(auth).then(() => window.location.replace("auth.html"));
+        }
+    };
+</script>
+
+</body>
+</html>
